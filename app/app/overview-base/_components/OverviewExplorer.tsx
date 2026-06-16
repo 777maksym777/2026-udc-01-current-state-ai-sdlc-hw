@@ -1,49 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { FifaMatch, FifaTeam } from "@/lib/fifa/types";
+import type { FifaMatch } from "@/lib/fifa/types";
 import { flagEmoji, formatMatchDay, matchDayKey } from "@/lib/fifa/format";
+import {
+  collectDays,
+  collectNations,
+  matchesQuery,
+  SELECT_CLASS,
+} from "@/lib/fifa/ui-utils";
 import { MatchCard } from "@/app/matches/_components/MatchCard";
 import { MatchStats } from "@/app/matches/_components/MatchStats";
 import { MatchPredictor } from "./MatchPredictor";
 
 const ALL = "all";
-
-/** Distinct nations across both sides of every match, sorted by name. */
-function collectNations(matches: FifaMatch[]): FifaTeam[] {
-  const byId = new Map<number, FifaTeam>();
-  for (const match of matches) {
-    byId.set(match.home_team.id, match.home_team);
-    byId.set(match.away_team.id, match.away_team);
-  }
-  return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
-}
-
-/** Distinct UTC match days, sorted chronologically. */
-function collectDays(matches: FifaMatch[]): string[] {
-  const days = new Set<string>();
-  for (const match of matches) days.add(matchDayKey(match.datetime));
-  return [...days].sort();
-}
-
-function matchesQuery(match: FifaMatch, query: string): boolean {
-  const haystack = [
-    match.home_team.name,
-    match.home_team.abbreviation,
-    match.away_team.name,
-    match.away_team.abbreviation,
-    match.stadium.name,
-    match.stadium.city,
-    `#${match.match_number}`,
-    String(match.match_number),
-  ]
-    .join(" ")
-    .toLowerCase();
-  return haystack.includes(query);
-}
-
-const SELECT_CLASS =
-  "w-full rounded-lg border border-black/[.12] bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400 dark:border-white/[.18] dark:bg-zinc-900";
 
 export function OverviewExplorer({ matches }: { matches: FifaMatch[] }) {
   const [query, setQuery] = useState("");
@@ -60,8 +30,8 @@ export function OverviewExplorer({ matches }: { matches: FifaMatch[] }) {
       if (q && !matchesQuery(match, q)) return false;
       if (id !== null && match.home_team.id !== id && match.away_team.id !== id)
         return false;
-      return !(day !== ALL && matchDayKey(match.datetime) !== day);
-
+      if (day !== ALL && matchDayKey(match.datetime) !== day) return false;
+      return true;
     });
   }, [matches, query, nationId, day]);
 

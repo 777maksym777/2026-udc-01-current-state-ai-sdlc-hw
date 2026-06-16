@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CURRENT_SEASON, getWorldCupMatches } from "@/lib/fifa/client";
-import { OverviewExplorer } from "./_components/OverviewExplorer";
+import { OverviewExplorer } from "@/app/overview-base/_components/OverviewExplorer";
 
 export const metadata: Metadata = {
   title: "World Cup Overview",

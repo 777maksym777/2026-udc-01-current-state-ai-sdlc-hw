@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CURRENT_SEASON, getWorldCupMatches } from "@/lib/fifa/client";
 import { MatchPredictor } from "@/app/overview-base/_components/MatchPredictor";
-import { TeamStatsTable } from "./_components/TeamStatsTable";
-import { DashboardExplorer } from "./_components/DashboardExplorer";
+import { TeamStatsTable } from "@/app/dashboard/_components/TeamStatsTable";
+import { DashboardExplorer } from "@/app/dashboard/_components/DashboardExplorer";
 
 export const metadata: Metadata = {
   title: "World Cup Dashboard",

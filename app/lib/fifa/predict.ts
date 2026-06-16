@@ -34,6 +34,13 @@ const HOME_ADVANTAGE = 0.3;
 // Fallback goals-per-game when the dataset has no completed matches at all.
 const DEFAULT_AVG_GOALS = 1.3;
 
+// Draw probability tapers from a baseline as the expected-goals margin grows,
+// clamped to a sane band so evenly-matched or lopsided games stay realistic.
+const BASE_DRAW_PROB = 0.32;
+const DRAW_SENSITIVITY = 0.14;
+const MAX_DRAW_PROB = 0.34;
+const MIN_DRAW_PROB = 0.1;
+
 function isCompleted(match: FifaMatch): boolean {
   return (
     match.status === "completed" &&
@@ -144,7 +151,10 @@ export function predictMatch(
   const margin = expectedHome - expectedAway;
 
   // Closer expected scores => higher draw chance (clamped to a sane band).
-  const draw = Math.min(0.34, Math.max(0.1, 0.32 - 0.14 * Math.abs(margin)));
+  const draw = Math.min(
+    MAX_DRAW_PROB,
+    Math.max(MIN_DRAW_PROB, BASE_DRAW_PROB - DRAW_SENSITIVITY * Math.abs(margin)),
+  );
   const decisive = 1 - draw;
   const homeShare = 1 / (1 + Math.exp(-1.6 * margin));
 

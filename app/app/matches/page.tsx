@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CURRENT_SEASON, getWorldCupMatches } from "@/lib/fifa/client";
-import { MatchCard } from "./_components/MatchCard";
-import { MatchStats } from "./_components/MatchStats";
+import { MatchCard } from "@/app/matches/_components/MatchCard";
+import { MatchStats } from "@/app/matches/_components/MatchStats";
 
 export const metadata: Metadata = {
   title: "FIFA World Cup Matches",

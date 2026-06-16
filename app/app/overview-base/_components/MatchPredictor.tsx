@@ -4,20 +4,9 @@ import { useMemo, useState } from "react";
 import type { FifaMatch, FifaTeam } from "@/lib/fifa/types";
 import { flagEmoji } from "@/lib/fifa/format";
 import { buildForm, predictMatch } from "@/lib/fifa/predict";
-
-function collectNations(matches: FifaMatch[]): FifaTeam[] {
-  const byId = new Map<number, FifaTeam>();
-  for (const match of matches) {
-    byId.set(match.home_team.id, match.home_team);
-    byId.set(match.away_team.id, match.away_team);
-  }
-  return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
-}
+import { collectNations, SELECT_CLASS } from "@/lib/fifa/ui-utils";
 
 const pct = (value: number) => `${Math.round(value * 100)}%`;
-
-const SELECT_CLASS =
-  "w-full rounded-lg border border-black/[.12] bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400 dark:border-white/[.18] dark:bg-zinc-900";
 
 function TeamSelect({
   label,
